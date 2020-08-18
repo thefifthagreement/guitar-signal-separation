@@ -23,7 +23,7 @@ def get_instruments_dict(instruments_list):
 
     returns a dict {'instrument 1': 'intrusment_1'}
     """
-    return {i: i.replace(' ', '_') for i in instruments_list}
+    return {i: i.replace(' ', '_').replace("/", '_') for i in instruments_list}
 
 def get_instrument_stems(stems, instrument_name):
     """
@@ -48,3 +48,15 @@ def get_instrument_tracks(instrument_stems, instrument_name):
     return a list of TRACKS containing the instrument
     """
     return list(set([s.split("_STEM")[0] for s in instrument_stems]))
+
+if __name__ == "__main__":
+    import pandas as pd
+    from pathlib import Path
+    wd_path = Path.cwd()
+
+    # metadata table
+    metadata_path = wd_path.joinpath("data")
+    metadata_df = pd.read_csv(metadata_path.joinpath("metadata.csv"))
+
+    instruments_dict = get_instruments_dict(get_instruments_list(metadata_df["stems"]))
+    print(instruments_dict)

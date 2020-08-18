@@ -36,7 +36,7 @@ def pre_processing(metadata_df, target_instrument_name):
 
     # the folder where to copy the STEMS for the preprocessing
     umix_stems_folders = [umix_data_path.joinpath("stems", f.name) for f in instrument_folders]
-    """
+    
     # copy the target STEMS in open-unmix source folder before renaming or fusion
     print("Copying the stems folders...")
     for i in tqdm(range(len(instrument_folders))):
@@ -92,7 +92,7 @@ def pre_processing(metadata_df, target_instrument_name):
             for f in track_path.glob(f"{track_path.name.split('_')[0]}*"): # the file name is like trackname_*
                 if f.is_file():
                     f.rename(track_path.joinpath(f"{instruments_dict[target_instrument_name]}.wav"))
-    """
+    
     return umix_stems_folders
 
 def copy_split(split, folders):

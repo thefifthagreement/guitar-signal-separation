@@ -59,4 +59,13 @@ if __name__ == "__main__":
     metadata_df = pd.read_csv(metadata_path.joinpath("metadata.csv"))
 
     instruments_dict = get_instruments_dict(get_instruments_list(metadata_df["stems"]))
-    print(instruments_dict)
+    print("instrument list:")
+    for k, v in instruments_dict.items():
+        print(f"{k}: {v}")
+
+    print()
+    target_instrument = "clean electric guitar"
+    clean_guitar_stems = get_instrument_stems(metadata_df["stems"], target_instrument)
+    clean_guitar_tracks = get_instrument_tracks(clean_guitar_stems, target_instrument)
+
+    print(f"{len(clean_guitar_tracks)} tracks containing {target_instrument} ({len(clean_guitar_tracks)/196:.2%})")

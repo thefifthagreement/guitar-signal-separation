@@ -30,6 +30,8 @@ def pre_processing(metadata_df, target_instrument_name):
     # list of target instrument folders
     instrument_stems = get_instrument_stems(STEMS, target_instrument_name)
     instrument_tracks = get_instrument_tracks(instrument_stems, target_instrument_name)
+    print(f"Pre-processing of the audio files, the target instrument is {target_instrument_name}.")
+    print(f"{len(instrument_tracks)} tracks containing the target.")
 
     # the folder of the original STEMS
     instrument_folders = sorted([medleydb_path.joinpath(t, f"{t}_STEMS") for t in instrument_tracks])
@@ -47,7 +49,8 @@ def pre_processing(metadata_df, target_instrument_name):
 
     # for each track we rename the STEMS using their instrument name
     # if the target instrument is in more than 1 stem, we sum the corresponding wav files
-    for track_path in umix_stems_folders:
+    print("Renaming the files using the instrument name")
+    for track_path in tqdm(umix_stems_folders):
         # the stems of the current track
         track_stems = metadata_df.query(f"stem_dir == '{track_path.name}'")["stems"].iloc[0]
         track_stems = eval(track_stems)
@@ -109,6 +112,7 @@ def train_valid_split(umix_stems_folders):
     """
     Split the tracks into train and valid folders
     """
+    print("Spliting in train valid folders...")
     train, valid = train_test_split(umix_stems_folders, test_size=0.2, random_state=42)
     copy_split("train", train)
     copy_split("valid", valid)

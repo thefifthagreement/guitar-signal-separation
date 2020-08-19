@@ -2,7 +2,7 @@
 """
 MedleyDB preprocessing
 """
-from os import environ, rename
+from os import environ
 from shutil import copytree
 from pathlib import Path
 from tqdm import tqdm

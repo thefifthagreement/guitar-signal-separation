@@ -7,3 +7,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints

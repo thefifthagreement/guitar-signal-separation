@@ -28,7 +28,10 @@ umix_data_path = wd_path.parent.joinpath("open-unmix", "data")
 # folder of the dataset, mixes and stems
 medleydb_path = Path(environ['MEDLEYDB_PATH'])
 
-def pre_processing(metadata_df, target_instrument_name, copy_folders=True):
+# limiting the duration of the STEMS (seconds)
+max_duration = 180
+
+def pre_processing(metadata_df, target_instrument_name, copy_folders=True, limit_duration=True):
 
     STEMS = metadata_df["stems"]
 
@@ -102,6 +105,14 @@ def pre_processing(metadata_df, target_instrument_name, copy_folders=True):
                 for f in track_path.glob(f"{track_path.name.split('_')[0]}*"): # the file name is like trackname_*
                     if f.is_file():
                         f.rename(track_path.joinpath(f"{instruments_dict[target_instrument_name]}.wav"))
+
+    if limit_duration:
+        # limiting the duration of the audio files
+        for f in tqdm(umix_data_path.joinpath("stems").glob("**/*.wav")):
+            rate, wav = wavfile.read(f)
+            if wav.shape[0] // rate > max_duration:
+                wav = wav[0:max_duration*rate]
+                wavfile.write(f, rate, wav)
     
     return umix_stems_folders
 
@@ -111,18 +122,18 @@ def copy_split(split, folders):
     """
     umix_data_path.joinpath(split).mkdir()
     print(f"Copying {split} split files...")
-    for i, folder in tqdm(enumerate(folders)):
-        umix_data_path.joinpath(split, str(i+1)).mkdir()
-        copytree(folder, umix_data_path.joinpath(split, str(i+1)), dirs_exist_ok=True)
+    for folder in tqdm(folders):
+        umix_data_path.joinpath(split, folder.name).mkdir()
+        copytree(folder, umix_data_path.joinpath(split, folder.name), dirs_exist_ok=True)
 
-def train_valid_split(umix_stems_folders, sample=0):
+def train_valid_split(umix_stems_folders, nb_sample=0):
     """
     Split the tracks into train and valid folders
     sample: the size of the sample of folders for testing purpose
     """
 
-    if sample > 0:
-        umix_stems_folders = sample(umix_stems_folders, sample)
+    if nb_sample > 0:
+        umix_stems_folders = sample(umix_stems_folders, nb_sample)
 
     print("Spliting in train valid folders...")
     train, valid = train_test_split(umix_stems_folders, test_size=0.2, random_state=42)
@@ -138,8 +149,7 @@ if __name__ == "__main__":
     target_instrument_name = "clean electric guitar"
 
     # preprocessing the STEMS, returning the folders with the correct files
-    umix_stems_folders = pre_processing(metadata_df, target_instrument_name, copy_folders=False)
+    umix_stems_folders = pre_processing(metadata_df, target_instrument_name, copy_folders=False, limit_duration=False)
 
     # divide the dataset and create the folder architecture for the training
     train_valid_split(umix_stems_folders)
-

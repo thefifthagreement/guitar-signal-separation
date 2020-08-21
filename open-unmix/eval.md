@@ -1,6 +1,7 @@
 # Environnement
 
 Librairies dans le fichier *requirements.txt*
+`conda install pytorch=1.3.1 torchvision cudatoolkit=10.1 -c pytorch`
 
 # Paramètres
 

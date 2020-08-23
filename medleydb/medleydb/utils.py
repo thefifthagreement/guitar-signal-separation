@@ -49,6 +49,19 @@ def get_instrument_tracks(instrument_stems, instrument_name):
     """
     return list(set([s.split("_STEM")[0] for s in instrument_stems]))
 
+def get_track_instruments(track_stems):
+    """
+    track_stems: dict of stems of the track
+    
+    return the instrument list of a track
+    """
+    track_stems = eval(track_stems)
+    track_instruments = []
+    for s in track_stems:
+        track_instruments.append(track_stems[s]["instrument"])
+        
+    return list(set(track_instruments))
+
 if __name__ == "__main__":
     import pandas as pd
     from pathlib import Path
@@ -69,3 +82,6 @@ if __name__ == "__main__":
     clean_guitar_tracks = get_instrument_tracks(clean_guitar_stems, target_instrument)
 
     print(f"{len(clean_guitar_tracks)} tracks containing {target_instrument} ({len(clean_guitar_tracks)/196:.2%})")
+
+    instruments_0 = get_track_instruments(metadata_df.iloc[0]["stems"])
+    print(instruments_0)

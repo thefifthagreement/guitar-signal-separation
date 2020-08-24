@@ -2,7 +2,7 @@
 
 Librairies dans le fichier *requirements.txt*
 `conda install numpy=1.16 scipy=1.3`
-`conda install pytorch=1.3.1 torchvision cudatoolkit=10.1 -c pytorch`
+`conda install pytorch=1.3.1 torchvision cudatoolkit=10.0 -c pytorch`
 `conda install scikit-learn=0.21 tqdm=4.32 ffmpeg`
 `pip install resampy musdb==0.3.1 norbert>=0.2.0 museval==0.3.0 gitpython`
 

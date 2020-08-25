@@ -23,7 +23,7 @@ wd_path = Path.cwd()
 metadata_path = wd_path.joinpath("data")
 
 # data folder for the open-unmix model
-umix_data_path = wd_path.parent.joinpath("open-unmix", "data")
+umix_data_path = Path("/media/mvitry/Windows/umx/data")
 
 # folder of the dataset, mixes and stems
 medleydb_path = Path(environ['MEDLEYDB_PATH'])
@@ -146,10 +146,10 @@ if __name__ == "__main__":
     metadata_df = pd.read_csv(metadata_path.joinpath("metadata.csv"))
 
     # target instrument
-    target_instrument_name = "clean electric guitar"
+    target_instrument_name = "acoustic guitar"
 
     # preprocessing the STEMS, returning the folders with the correct files
-    umix_stems_folders = pre_processing(metadata_df, target_instrument_name, copy_folders=False, limit_duration=False)
+    umix_stems_folders = pre_processing(metadata_df, target_instrument_name, copy_folders=True, limit_duration=False)
 
     # divide the dataset and create the folder architecture for the training
     train_valid_split(umix_stems_folders)

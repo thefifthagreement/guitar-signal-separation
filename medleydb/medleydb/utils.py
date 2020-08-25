@@ -64,7 +64,7 @@ def get_track_instruments(track_stems):
         
     return list(set(track_instruments))
 
-def get_instrument_repartition(stems, activation_path, instrument_name):
+def get_instrument_ratio(stems, activation_path, instrument_name):
     """
     Returns a dict {track: percentage}
     of the percentage of presence of the instrument in the tracks

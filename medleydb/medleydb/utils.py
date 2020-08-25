@@ -67,7 +67,7 @@ def get_track_instruments(track_stems):
 def get_instrument_ratio(stems, activation_path, instrument_name):
     """
     Returns a dict {track: percentage}
-    of the percentage of presence of the instrument in the tracks
+    of the ratio of presence of the instrument in the tracks
     and a list of the missing activation files
 
     stems: the stems in the metadata dataframe
@@ -92,12 +92,11 @@ def get_instrument_ratio(stems, activation_path, instrument_name):
         
         dfx = pd.read_csv(target_activation_path)
         df1 = dfx[stem_id].iloc[:,0] 
-        mask = df1 > 0.5
 
         # percentage of the presence of the instrument in the stem
-        presence_percentage = mask.value_counts(True)[1]
+        presence_ratio = (df1 > 0.5).value_counts(True)[1]
         
-        track_activations[track] = presence_percentage
+        track_activations[track] = presence_ratio
     
     return track_activations, mising_activation_files
 

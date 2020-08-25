@@ -68,6 +68,7 @@ def get_instrument_ratio(stems, activation_path, instrument_name):
     """
     Returns a dict {track: percentage}
     of the percentage of presence of the instrument in the tracks
+    and a list of the missing activation files
 
     stems: the stems in the metadata dataframe
     activation_path: the activation files path
@@ -77,6 +78,7 @@ def get_instrument_ratio(stems, activation_path, instrument_name):
     target_tracks = get_instrument_tracks(target_stems, instrument_name)
 
     track_activations = {}
+    mising_activation_files = []
 
     for track in target_tracks:
         
@@ -85,7 +87,7 @@ def get_instrument_ratio(stems, activation_path, instrument_name):
         stem_id = ['S' + s.split('_')[-1][:2] for s in target_stems if s.split('_STEM')[0] == track]
 
         if not target_activation_path.exists():
-            print(f"{track} activation file missing.")
+            mising_activation_files.append(track)
             continue
         
         dfx = pd.read_csv(target_activation_path)
@@ -97,7 +99,7 @@ def get_instrument_ratio(stems, activation_path, instrument_name):
         
         track_activations[track] = presence_percentage
     
-    return track_activations
+    return track_activations, mising_activation_files
 
 if __name__ == "__main__":
     wd_path = Path.cwd()

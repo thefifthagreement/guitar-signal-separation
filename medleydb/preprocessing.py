@@ -15,18 +15,24 @@ from random import sample
 import pandas as pd
 from scipy.io import wavfile
 from sklearn.model_selection import train_test_split
-from medleydb.utils import get_instrument_stems, get_instrument_tracks, get_instruments_dict, get_instruments_list
+from medleydb.utils import get_instrument_stems, get_instrument_tracks, get_instruments_dict, get_instruments_list, get_instrument_ratio
 
 wd_path = Path.cwd()
 
 # metadata table
-metadata_path = wd_path.joinpath("data")
+data_path = wd_path.joinpath("data")
 
 # data folder for the open-unmix model
 umix_data_path = Path("/media/mvitry/Windows/umx/data")
 
 # folder of the dataset, mixes and stems
 medleydb_path = Path(environ['MEDLEYDB_PATH'])
+
+# medleyDB repo data path
+metadata_path = Path(environ['METADATA_PATH']) 
+
+# path to activation files in the medleyDB local repository
+activation_path = metadata_path.joinpath("medleydb", "data", "Annotations", "Activation_Confidence", "all")
 
 # limiting the duration of the STEMS (seconds)
 max_duration = 180
@@ -35,9 +41,12 @@ def pre_processing(metadata_df, target_instrument_name, copy_folders=True, limit
 
     STEMS = metadata_df["stems"]
 
-    # list of target instrument folders
-    instrument_stems = get_instrument_stems(STEMS, target_instrument_name)
-    instrument_tracks = get_instrument_tracks(instrument_stems, target_instrument_name)
+    # target instrument presence ratio in the target instrument tracks
+    target_track_activations, _ = get_instrument_ratio(metadata_df["stems"], activation_path, target_instrument_name)
+
+    # listing the track with a ratio more than 40%
+    instrument_tracks = [track for track, ratio in target_track_activations.items() if ratio > 0.4]
+
     print(f"Pre-processing of the audio files, the target instrument is {target_instrument_name}.")
     print(f"{len(instrument_tracks)} tracks containing the target.")
 
@@ -143,7 +152,7 @@ def train_valid_split(umix_stems_folders, nb_sample=0):
 
 if __name__ == "__main__":
     # MedleyDB metadata
-    metadata_df = pd.read_csv(metadata_path.joinpath("metadata.csv"))
+    metadata_df = pd.read_csv(data_path.joinpath("metadata.csv"))
 
     # target instrument
     target_instrument_name = "acoustic guitar"

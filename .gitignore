@@ -1,6 +1,6 @@
 data
 output
-medleydb/.env
+.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -10,3 +10,6 @@ __pycache__/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+static
+website/.vscode/launch.json

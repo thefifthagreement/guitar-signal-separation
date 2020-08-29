@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="field">
+    <p class="control">
+        {% if filename %}
+        <div class="table-container">
+            <table class="table table-striped is-fullwidth" id="results">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Metadata</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ filename }}</td>
+                    <td>{{ metadata }}</td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-container">
+          <table class="table table-striped is-fullwidth" id="audio">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Audio</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Mix</td>
+                  <td>
+                    <audio controls>
+                      <source src="/static/audio/{{ filename }}" type="audio/wav">
+                    </audio>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Guitar</td>
+                  <td>
+                    <audio controls>
+                      <source src="/static/audio/{{ pred }}" type="audio/wav">
+                    </audio>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Accompaniment</td>
+                  <td>
+                    <audio controls>
+                      <source src="/static/audio/{{ comp }}" type="audio/wav">
+                    </audio>
+                  </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+        {% endif %}
+    </p>
+</div>
+<div class="field">
+    <p class="control">
+        <a class="button is-success" href="{{ url_for('index') }}">Retour</a>
+    </p>
+</div>
+
+{% endblock %}

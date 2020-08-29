@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-social@1/bin/bulma-social.min.css">
+    <title></title>
+</head>
+<body>
+    <section class="hero is-light">
+        <div class="hero-head">
+           
+                <nav class="navbar" role="navigation" aria-label="main navigation">
+                    <div class="navbar-menu">
+                        <div class="navbar-end">
+                            <p class="navbar-item">
+                                <a class="button" href="https://github.com/thefifthagreement/jedha-final-project">
+                                    <span class="icon"><i class="fab fa-github"></i></span>
+                                    <span>GitHub</span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </nav>
+        </div>
+        <div class="hero-body">
+        <div class="container">     
+            <h2 class="title is-2">Separating the guitar signal from the mix</h2>
+            <h4 class="subtitle is-4"><i>Music Source Separation application using Open-Unmix</i></h4> 
+            <figure class="image is-503x116">
+                <img src="https://nsa40.casimages.com/img/2020/08/26/200826044845605970.png">
+              </figure>     
+        </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+        {% block content %}{% endblock %}
+        </div>
+    </section>
+</body>
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>Théo Rivaton - Mickaël Vitry</p>
+        <p><i>Jedha Bootcamp dsmft-paris-08</i></p>
+    </div>
+</footer>
+</html>

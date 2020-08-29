@@ -6,16 +6,16 @@ from time import time
 umx_train_path = "/home/mvitry/Dev/open-unmix-pytorch"
 umx_data_path = Path("/media/mvitry/Windows/umx")
 
-target_instrument = "clean_electric_guitar"
-target_file = "clean_electric_guitar.wav"
+target_instrument = "acoustic_guitar"
+target_file = "acoustic_guitar.wav"
 model = umx_data_path.joinpath("output")
 dataset_type = "trackfolder_var"
 root = umx_data_path.joinpath("data")
 output = umx_data_path.joinpath("output")
-epochs = "100"
-batch_size = "16"
+epochs = "200"
+batch_size = "32"
 seq_dur = "6"
-nb_workers = "4" # >0 doesn't work on Windows, got to try with Docker (wsl)
+nb_workers = "4"
 ext = ".wav"
 
 args = [

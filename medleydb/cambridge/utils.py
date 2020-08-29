@@ -2,12 +2,22 @@
 """
 Utilities to use the Cambridge Music Technology audio files
 """
+from shutil import copytree
 from pathlib import Path
+import wave
+import array
 import re
 import scipy.signal
+from scipy.io import wavfile
+from librosa import load, get_samplerate, get_duration
 import numpy as np
+import pandas as pd
 import librosa
+import soundfile as sf
 from tqdm import tqdm
+
+# data folder for the open-unmix model
+umx_data_path = Path("/media/mvitry/Windows/umx/data")
 
 def track_energy(wave, win_len, win):
     """Compute the energy of an audio signal
@@ -133,28 +143,216 @@ def get_instruments(audio_path: Path) -> list:
         instruments.append(track.name.split(".wav")[0])
     return list(sorted(set(instruments)))
 
-if __name__ == "__main__":
-    audio_path = Path("/media/mvitry/7632099B3209620B/Mickaël/Documents/MIR/Cambridge Music Technology/acoustic guitar")
-    instruments_list = get_instruments(audio_path)
+def get_instrument_ratio(activation_path: Path) -> dict:
+    """
+    Returns a dict {stem: percentage}
+    of the ratio of presence of the instrument in the stem
 
-    print("\nacoustic guitar tracks\n")
+    activation_path: the activation files path
+    """
+    stem_name = activation_path.name.split('.lab')[0]
 
-    ac_guit_tracks = []
-    for track in audio_path.glob("**/*.wav"):
-        if re.match(r".*[aA]coustic.*|.*[aA]cGtr.*", track.name.split(".wav")[0]):
-            ac_guit_tracks.append([track.parent.name, track])
+    dfx = pd.read_csv(activation_path)
+    
+    # ratio of the presence of the instrument in the stem
+    presence_ratio = (dfx[stem_name] > 0.5).value_counts(True)[1]
+    
+    return {stem_name: presence_ratio}
 
-    # création des fichiers d'annotations des pistes acoustic guitar
+def create_activation_files(target_tracks: list) -> list:
+    """
+    Returns the list of the activation files created
+
+    target_tracks: list of Path to the tracks to annotate
+    """
+    created_files = []
     print("\nCreating activation files...\n")
-    for track in tqdm(ac_guit_tracks):
+    for track in tqdm(target_tracks):
         track_name = track[1].name.split('.wav')[0]
         print(f"{track[0]}: {track_name}")
         activations = compute_activation_confidence(track[1])
+        file_name = audio_path.parent.joinpath("annotations", f"{track_name}.lab")
         np.savetxt(
-            audio_path.parent.joinpath("annotations", f"{track_name}.lab"),
+            file_name,
             activations,
             header='time,{}'.format(track_name),
             delimiter=',',
             fmt='%.4f',
             comments=''
             )
+        created_files.append(file_name)
+
+    return created_files
+
+def contains_acoustic(track_name: str) -> bool:
+    """
+    Returns true if the name contains "acoustic guitar"
+    """
+    return re.match(r".*[aA]coustic.*|.*[aA]cGtr.*", track_name)
+    
+def get_acoustic_stems(folder: Path) -> list:
+    """
+    Returns a list of the stems containing acoustic guitar
+
+    folder: a folder containing stems
+    """
+    ac_guit_stems = []
+    for stem in folder.glob("**/*.wav"):
+        if contains_acoustic(stem.name.split(".wav")[0]):
+            ac_guit_stems.append(stem)
+    return ac_guit_stems
+
+def processing_tracks(audio_path: Path, target_instrument_name:str, copy_folders=True) -> dict:
+    """
+    Returns a dict of the processed tracks
+
+    For each track of the Cambridge Music Technology
+    Create a copy of the track to the umx data folder
+    The track must contain acoustic guitar and the stems more than 50% of signal
+    """
+    stems_ratio = {}
+
+    track_folders = [folder for folder in audio_path.iterdir() if folder.is_dir()]
+
+    for folder in track_folders:
+        ac_guit_stems = get_acoustic_stems(folder)
+        if len(ac_guit_stems) == 0:
+            continue
+        # for each track, if a stem is more than 60% acoustic guitar
+        track_name = folder.name.split("_Full")[0]
+        track_stems_ratios = []
+        for stem in ac_guit_stems:
+            activation_path = audio_path.parent.joinpath("annotations", stem.name.split(".wav")[0] + ".lab")
+            ratio = get_instrument_ratio(activation_path)
+            track_stems_ratios.append(ratio)
+        if len(track_stems_ratios) > 0:
+            stems_ratio[track_name] = track_stems_ratios
+    
+    copied_folders = []
+    if copy_folders:
+        #stems_folder = audio_path.parent.joinpath("stems")
+        stems_folder = audio_path.parent.joinpath("stems")
+        # create the folder in umx/stems
+        print("\nCreating the stems folder")
+        for track, stems in tqdm(stems_ratio.items()):
+            for i, stem in enumerate(stems):
+                # create a copy of the stems
+                for stem_name, stem_ratio in stem.items():
+                    if stem_ratio < 0.6:
+                        continue
+
+                    src_folder = audio_path.joinpath(track + "_Full")
+                    dst_folder = stems_folder.joinpath(f"{track}_{i+1}")
+                    copytree(src_folder, dst_folder)
+                    copied_folders.append(dst_folder)
+                    
+                    # delete the others acoustic stems
+                    for target_stems in stems:
+                        for target_stem in target_stems.keys():
+                            f = dst_folder.joinpath(f"{target_stem}.wav")
+                            # if it's the current stem, rename
+                            if target_stem == stem_name:
+                                f.rename(dst_folder.joinpath(f"{target_instrument_name}.wav"))
+                            # else remove
+                            else:
+                                f.unlink()  
+
+        # reducing the duration and harmonizing the number of channels and encoding format    
+        print("\nReducing the duration...")
+        for f in tqdm(copied_folders):
+            _, durations = get_stems_durations(f)
+            min_duration = np.floor(min(durations))
+            for stem in f.glob("**/*.wav"):
+                sr = get_samplerate(stem)
+                wav, _ = load(stem, sr)
+                sf.write(stem, wav[:int(sr*min_duration)], samplerate=44100)
+        
+        # making stereo files
+        print("making stereo files")
+        for f in tqdm(copied_folders):
+            for stem in f.glob("**/*.wav"):
+                make_stereo(str(stem), str(stem))
+
+            
+    print(f"\n{len(copied_folders)} folders created")
+    return stems_ratio 
+
+def get_stems_durations(folder: Path):
+    """
+    Returns the number of channels and the durations of the stems in the folder
+    """
+    mono = 0
+    durations = []
+    for stem in folder.glob("**/*.wav"):
+        sr = get_samplerate(stem)
+        wav, _ = load(stem, sr, mono=False)
+        mono += len(wav.shape)
+        durations.append(get_duration(wav, sr))
+
+    return mono / len(durations), durations
+
+def get_folder_stats(audio_path):
+    """
+    Returns the channels and the durations of the stems
+    """ 
+    folder_stats = {}
+    for folder in tqdm(audio_path.iterdir()):
+        if folder.is_dir():
+            nb_channels, durations = get_stems_durations(folder)
+            if nb_channels == 1:
+                channels = "mono"
+            elif nb_channels == 2:
+                channels = "stéréo"
+            else:
+                channels = "mixte"
+
+            folder_stats[folder.name] = [channels, min(durations), np.mean(durations)]
+    
+    return folder_stats
+
+def make_stereo(file1, output):
+    """
+    Outputs a stereo wav file from the mono input
+    """
+    ifile = wave.open(file1)
+
+    (nchannels, sampwidth, framerate, nframes, comptype, compname) = ifile.getparams()
+    assert comptype == 'NONE'  # Compressed not supported yet
+    array_type = {1:'B', 2: 'h', 4: 'l'}[sampwidth]
+    left_channel = array.array(array_type, ifile.readframes(nframes))[::nchannels]
+    ifile.close()
+
+    stereo = 2 * left_channel
+    stereo[0::2] = stereo[1::2] = left_channel
+
+    ofile = wave.open(output, 'w')
+    ofile.setparams((2, sampwidth, framerate, nframes, comptype, compname))
+    ofile.writeframes(stereo.tobytes())
+    ofile.close()
+
+if __name__ == "__main__":
+    # target instrument
+    target_instrument_name = "acoustic_guitar"
+
+    audio_path = Path("/media/mvitry/7632099B3209620B/Mickaël/Documents/MIR/Cambridge Music Technology/acoustic guitar")
+
+    # check the instrument naming
+    instruments_list = get_instruments(audio_path)
+
+    # creating the activation files of the targeted tracks
+    #create_activation_files(get_acoustic_stems(audio_path))
+
+    stems_ratio = processing_tracks(audio_path, target_instrument_name, copy_folders=True)
+
+    for track, stems in stems_ratio.items():
+        print(f"\nTrack: {track}")
+        for s in stems:
+            for n, r in s.items():
+                print(f"- {n}: {r:.2%}")
+
+    """folder_stats = get_folder_stats(audio_path.parent.joinpath("stems"))
+
+    for k, v in folder_stats.items():
+        print(f"\n{k}")
+        for s in v:
+            print(f"-{s}")"""

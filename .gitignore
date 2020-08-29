@@ -12,4 +12,5 @@ __pycache__/
 .ipynb_checkpoints
 
 static
-website/.vscode/launch.json
+launch.json
+settings.json

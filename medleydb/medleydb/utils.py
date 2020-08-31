@@ -4,6 +4,8 @@ Utilities to get list from MedleyDB metadata
 """
 import pandas as pd
 from pathlib import Path
+from librosa import load
+import soundfile as sf
 
 def get_instruments_list(stems):
     """
@@ -99,6 +101,13 @@ def get_instrument_ratio(stems, activation_path, instrument_name):
         track_activations[track] = presence_ratio
     
     return track_activations, mising_activation_files
+
+def get_excerpt(wav_path: Path, offset, duration):
+    """
+    Create an excerpt from the wav
+    """
+    wav, sr = load(wav_path, sr=None, offset=offset, duration=duration)
+    sf.write(wav_path.parent.joinpath(wav_path.name.split(".")[0] + "_excerpt.wav"), wav, sr)
 
 if __name__ == "__main__":
     wd_path = Path.cwd()

@@ -14,6 +14,8 @@ import numpy as np
 from random import sample
 import pandas as pd
 from scipy.io import wavfile
+from librosa import load
+import soundfile as sf
 from sklearn.model_selection import train_test_split
 from medleydb.utils import get_instrument_stems, get_instrument_tracks, get_instruments_dict, get_instruments_list, get_instrument_ratio
 from cambridge.utils import processing_tracks as cambridge_processing
@@ -38,7 +40,7 @@ activation_path = metadata_path.joinpath("medleydb", "data", "Annotations", "Act
 # limiting the duration of the STEMS (seconds)
 max_duration = 180
 
-def pre_processing(metadata_df, target_instrument_name, copy_folders=True, limit_duration=True):
+def pre_processing(metadata_df, target_instrument_name, copy_folders=True, stereo=True):
 
     STEMS = metadata_df["stems"]
 
@@ -100,7 +102,7 @@ def pre_processing(metadata_df, target_instrument_name, copy_folders=True, limit
                 target_file = np.empty
                 for f in track_path.glob(f"{track_path.name.split('_')[0]}*"): # the files names are like trackname_*
                     if f.is_file():
-                        rate, wav = wavfile.read(f)
+                        wav, _ = load(f, sr=rate)
                         files.append(wav)
                     # deleting the partial target file 
                     f.unlink()
@@ -109,20 +111,19 @@ def pre_processing(metadata_df, target_instrument_name, copy_folders=True, limit
                 target_file = sum(files)
 
                 # writing the fusionned target wav file
-                wavfile.write(track_path.joinpath(f"{instruments_dict[target_instrument_name]}.wav"), rate=rate, data=target_file)
+                sf.write(track_path.joinpath(f"{instruments_dict[target_instrument_name]}.wav"), data=target_file, samplerate=rate)
             else:
                 # target instrument file rename
                 for f in track_path.glob(f"{track_path.name.split('_')[0]}*"): # the file name is like trackname_*
                     if f.is_file():
                         f.rename(track_path.joinpath(f"{instruments_dict[target_instrument_name]}.wav"))
 
-    if limit_duration:
-        # limiting the duration of the audio files
+    if not stereo:
+        # making mono files
+        print("making mono audio...")
         for f in tqdm(umx_data_path.joinpath("stems").glob("**/*.wav")):
-            rate, wav = wavfile.read(f)
-            if wav.shape[0] // rate > max_duration:
-                wav = wav[0:max_duration*rate]
-                wavfile.write(f, rate, wav)
+            wav, sr = load(f, sr=None)
+            sf.write(f, wav, sr)
     
     return umx_stems_folders
 
@@ -164,7 +165,7 @@ if __name__ == "__main__":
     cambridge_processing(cambridge_audio_path, target_instrument_name, copy_folders=False)
 
     # preprocessing the STEMS, returning the folders with the correct files
-    pre_processing(metadata_df, instrument_name, copy_folders=False, limit_duration=False)
+    pre_processing(metadata_df, instrument_name, copy_folders=False, stereo=True)
 
     umx_stems_folders = [f for f in umx_data_path.joinpath("stems").iterdir()]
 

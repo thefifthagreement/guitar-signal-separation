@@ -202,7 +202,7 @@ def get_acoustic_stems(folder: Path) -> list:
             ac_guit_stems.append(stem)
     return ac_guit_stems
 
-def processing_tracks(audio_path: Path, target_instrument_name:str, copy_folders=True) -> dict:
+def processing_tracks(audio_path: Path, target_instrument_name:str, copy_folders=True, stereo=True) -> dict:
     """
     Returns a dict of the processed tracks
 
@@ -230,8 +230,8 @@ def processing_tracks(audio_path: Path, target_instrument_name:str, copy_folders
     
     copied_folders = []
     if copy_folders:
+        stems_folder = umx_data_path.joinpath("stems")
         #stems_folder = audio_path.parent.joinpath("stems")
-        stems_folder = audio_path.parent.joinpath("stems")
         # create the folder in umx/stems
         print("\nCreating the stems folder")
         for track, stems in tqdm(stems_ratio.items()):
@@ -268,10 +268,11 @@ def processing_tracks(audio_path: Path, target_instrument_name:str, copy_folders
                 sf.write(stem, wav[:int(sr*min_duration)], samplerate=44100)
         
         # making stereo files
-        print("making stereo files")
-        for f in tqdm(copied_folders):
-            for stem in f.glob("**/*.wav"):
-                make_stereo(str(stem), str(stem))
+        if stereo:
+            print("making stereo files")
+            for f in tqdm(copied_folders):
+                for stem in f.glob("**/*.wav"):
+                    make_stereo(str(stem), str(stem))
 
             
     print(f"\n{len(copied_folders)} folders created")
@@ -342,7 +343,7 @@ if __name__ == "__main__":
     # creating the activation files of the targeted tracks
     #create_activation_files(get_acoustic_stems(audio_path))
 
-    stems_ratio = processing_tracks(audio_path, target_instrument_name, copy_folders=True)
+    stems_ratio = processing_tracks(audio_path, target_instrument_name, copy_folders=True, stereo=False)
 
     for track, stems in stems_ratio.items():
         print(f"\nTrack: {track}")

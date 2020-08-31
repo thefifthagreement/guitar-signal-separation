@@ -15,8 +15,10 @@ output = umx_data_path.joinpath("output")
 epochs = "200"
 batch_size = "32"
 seq_dur = "6"
+nb_channels = "1"
 nb_workers = "4"
 ext = ".wav"
+seed = "42"
 
 args = [
     "python", "train.py",
@@ -29,8 +31,10 @@ args = [
     "--batch-size", batch_size,
     "--seq-dur", seq_dur,
     "--nb-workers", nb_workers,
+    "--nb-channels", nb_channels,
     "--target-file", target_file,
-    "--ext", ext
+    "--ext", ext,
+    "--seed", seed
 ]
 
 if __name__ == "__main__":

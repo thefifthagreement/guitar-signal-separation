@@ -35,10 +35,16 @@ The clean electric guitar is top 4 while the acoustic is top 9 in the instrument
 ## References
 Open-unmix:
 ```
-Fabian-Robert Stöter, Stefan Uhlich, Antoine Liutkus, Yuki Mitsufuji. Open-Unmix - A Reference Implementation for Music Source Separation. Journal of Open Source Software, Open Journals, 2019, The Journal of Open Source Software, 4 (41), pp.1667. ⟨10.21105/joss.01667⟩. ⟨hal-02293689⟩
+Fabian-Robert Stöter, Stefan Uhlich, Antoine Liutkus, Yuki Mitsufuji.
+Open-Unmix - A Reference Implementation for Music Source Separation.
+Journal of Open Source Software, Open Journals, 2019, The Journal of Open Source Software, 4 (41), pp.1667.
+⟨10.21105/joss.01667⟩. ⟨hal-02293689⟩
 ```
 
 MedleyDB:
 ```
-R. Bittner, J. Salamon, M. Tierney, M. Mauch, C. Cannam and J. P. Bello, "MedleyDB: A Multitrack Dataset for Annotation-Intensive MIR Research", in 15th International Society for Music Information Retrieval Conference, Taipei, Taiwan, Oct. 2014.
+R. Bittner, J. Salamon, M. Tierney, M. Mauch, C. Cannam and J. P. Bello,
+"MedleyDB: A Multitrack Dataset for Annotation-Intensive MIR Research",
+in 15th International Society for Music Information Retrieval Conference,
+Taipei, Taiwan, Oct. 2014.
 ```

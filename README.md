@@ -2,8 +2,8 @@
 ![alt_text](./media/app_header.png)
 ## _Music Source Separation application using [Open-Unmix](https://github.com/sigsep/open-unmix-pytorch)_
 
-[Mickaël Vitry](https://github.com/thefifthagreement),
-Théo Rivaton
+[Mickaël Vitry](https://www.linkedin.com/in/micka%C3%ABl-vitry-b605489b/),
+[Théo Rivaton](https://www.linkedin.com/in/th%C3%A9o-rivaton-890804123/)
 
 Jedha Data Science Bootcamp - #dsmft-paris-08 - Fullstack final project
 
@@ -30,14 +30,20 @@ The clean electric guitar is top 4 while the acoustic is top 9 in the instrument
 
 30% of the tracks contains clean electric guitar, representing about 4 hours of music.
 
+## The Open-Unmix model
+![alt_text](./media/open_unmix.png)
 
+This open source model operates in the time-frequency domain to perform its prediction. It is based on a three-layer bidirectional LSTM. From a random mix of predefined duration, the model learns to predict the magnitude spectrogram of the target from the input mix. The model makes his predictions by applying a full-band frequency mask. The optimization is done minimizing a mean squared error in the magnitude domain.
+
+While this model was designed as a reference model for the SiSec, the MUSDB dataset is one of the five type of datasets we can use. To achieve our goal we choose the `VariableSourcesTrackFolderDataset`, since the tracks of MedleyDB have a variable number of sources.
 
 ## References
 Open-unmix:
 ```
 Fabian-Robert Stöter, Stefan Uhlich, Antoine Liutkus, Yuki Mitsufuji.
 Open-Unmix - A Reference Implementation for Music Source Separation.
-Journal of Open Source Software, Open Journals, 2019, The Journal of Open Source Software, 4 (41), pp.1667.
+Journal of Open Source Software, Open Journals, 2019,
+The Journal of Open Source Software, 4 (41), pp.1667.
 ⟨10.21105/joss.01667⟩. ⟨hal-02293689⟩
 ```
 

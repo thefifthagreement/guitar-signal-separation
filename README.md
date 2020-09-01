@@ -2,6 +2,9 @@
 ![alt_text](./media/app_header.png)
 ## _Music Source Separation application using [Open-Unmix](https://github.com/sigsep/open-unmix-pytorch)_
 
+[Mickaël Vitry](https://github.com/thefifthagreement),
+Théo Rivaton
+
 Jedha Data Science Bootcamp - #dsmft-paris-08 - Fullstack final project
 
 ## Introduction
@@ -16,7 +19,7 @@ In this project, our goal is to separate the _guitar_ signal from the mix.
 
 ## The MedleyDB dataset
 
-The SiSec is based on the MUSDB dataset where the targets are vocals, bass and drums. You can't use this dataset since the guitar stems are not available.
+The SiSec is based on the MUSDB dataset where the targets are vocals, bass and drums. We can't use this dataset since the guitar stems are not available.
 
 The [MedleyDB](https://medleydb.weebly.com/) is a dataset of annotated, royalty-free multitrack recordings.
 

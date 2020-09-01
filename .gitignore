@@ -1,6 +1,8 @@
 data
 output
 .env
+.vscode
+.gitignore
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -12,5 +14,3 @@ __pycache__/
 .ipynb_checkpoints
 
 static
-launch.json
-settings.json

@@ -1,5 +1,5 @@
 # Separating the guitar signal from the mix
-![alt_text](./static/app_header.png)
+![alt_text](./media/app_header.png)
 ## _Music Source Separation application using [Open-Unmix](https://github.com/sigsep/open-unmix-pytorch)_
 
 Jedha Data Science Bootcamp - #dsmft-paris-08 - Fullstack final project
@@ -8,11 +8,11 @@ Jedha Data Science Bootcamp - #dsmft-paris-08 - Fullstack final project
 
 The music source separation is an active research domain and the data-driven methods in this field reaches state of the art performances. The Signal Separation Evalution Campaign (*[SiSec](https://sisec18.unmix.app/#/)*) compares the performance of source separation systems on the same data. The audio signals are those from the _vocals, bass and drums_.
 
-![alt_text](./static/sisec.svg)
+![alt_text](./media/sisec.svg)
 
 In this project, our goal is to separate the _guitar_ signal from the mix.
 
-![alt_text](./static/guitar.svg)
+![alt_text](./media/guitar.svg)
 
 ## The MedleyDB dataset
 

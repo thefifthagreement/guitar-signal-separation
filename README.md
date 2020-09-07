@@ -25,10 +25,10 @@ The [MedleyDB](https://medleydb.weebly.com/) is a dataset of annotated, royalty-
 
 A total of 196 stereo tracks containing the mix, the processed stems, the raw audio and the metadata. The audio format is WAV (44100 Hz, 16 bit)
 
-The clean _**electric guitar**_ is **top 4** while the _**acoustic guitar **_ is **top 9** in the instrument distribution.
+The `clean electric guitar` is **top 4** while the `acoustic guitar` is **top 9** in the instrument distribution:
 ![alt_text](./medleydb/images/dist_instrument.png)
 
-30% of the tracks contains clean electric guitar, representing about 4 hours of music and about 20Go of data files.
+30% of the tracks contains `clean electric guitar`, representing about 4 hours of music and about 20Go of data files.
 
 ## The Open-Unmix model
 ![alt_text](./media/open_unmix.png)

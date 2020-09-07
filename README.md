@@ -30,7 +30,7 @@ The `clean electric guitar` is **top 4** while the `acoustic guitar` is **top 9*
 
 30% of the tracks contains `clean electric guitar`, representing about 4 hours of music and about 20Go of data files.
 
-## The Open-Unmix model
+## The Open-Unmix model (UMX)
 ![alt_text](./media/open_unmix.png)
 
 This open source model operates in the time-frequency domain to perform its prediction. It is based on a three-layer bidirectional LSTM. From a random mix of predefined duration, the model learns to predict the magnitude spectrogram of the target from the input mix. The model makes his predictions by applying a full-band frequency mask. The optimization is done minimizing a mean squared error in the magnitude domain.

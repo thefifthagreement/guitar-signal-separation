@@ -63,9 +63,11 @@ Even if we had less data (10Gb vs 20Gb), the results were better:
 
 ## Limitations
 
-The choice of the target is limiting. Since the audio sources are rare we can't separate any instrument signal out of a track. The targeted audio signal should be at least distinctive from the others.
+* The choice of the target is limiting. Since the audio sources are rare we can't separate any instrument signal out of a track.
 
-The number of instrument sharing the same frequency register in the mix should also be minimal.
+* The targeted audio signal must be distinctive from the others.
+
+* The number of instrument sharing the same frequency register in the mix should also be minimal.
 
 ## Architecture
 

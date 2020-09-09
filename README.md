@@ -80,7 +80,7 @@ You also find the preprocessing for the tracks of Cambridge Music Technology in 
 `train.py` is a python script to train a model
 `training plots.ipynb` shows plots of training losses and give insights on the model metadata.
 
-* In the `website` folder:
+* In the **website** folder:
 
 The app used to demonstrate the separation:
 ![alt_text](./media/website_main_page.png)

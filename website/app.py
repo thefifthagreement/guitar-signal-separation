@@ -8,7 +8,7 @@ from test import separate
 
 ALLOWED_EXTENSIONS = {'wav'}
 
-model_name = "/media/mvitry/Windows/umx/output - acg mono - b epoch 332"
+model_name = "/path/to/model"
 target_instrument = "acoustic_guitar"
 
 

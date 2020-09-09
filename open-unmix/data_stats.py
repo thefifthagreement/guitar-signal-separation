@@ -1,8 +1,11 @@
+"""
+Compute some statistics on the preprocessed dataset:
+
+"""
 from pathlib import Path
 import numpy as np
 from scipy.io import wavfile
 import librosa
-from tqdm import tqdm
 
 wd_path = Path.cwd()
 
@@ -12,6 +15,9 @@ umx_data_path = wd_path.joinpath("data")
 max_duration =  180
 
 def split_duration(split):
+    """
+    Returns the max, min and mean duration of the tracks in the split folder
+    """
     parent = ""
     durations = {}
     durations_values = []
@@ -24,13 +30,6 @@ def split_duration(split):
 
     durations_values = [d for d in durations.values()]
     return [max(durations_values), min(durations_values), np.mean(durations_values)]
-
-def limit_duration():
-    for f in tqdm(umx_data_path.joinpath("stems").glob("**/*.wav")):
-        rate, wav = wavfile.read(f)
-        if wav.shape[0] // rate > max_duration:
-            wav = wav[0:max_duration*rate]
-            wavfile.write(f, rate, wav)
 
 if __name__ == "__main__":
     print("train split min/max/mean durations: {:.2f}/{:.2f}/{:.2f},\ntest split min/max durations: {:.2f}/{:.2f}/{:.2f}" \

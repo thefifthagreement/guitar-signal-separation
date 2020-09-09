@@ -332,28 +332,4 @@ def make_stereo(file1, output):
     ofile.close()
 
 if __name__ == "__main__":
-    # target instrument
-    target_instrument_name = "acoustic_guitar"
-
-    audio_path = Path("/media/mvitry/7632099B3209620B/Mickaël/Documents/MIR/Cambridge Music Technology/acoustic guitar")
-
-    # check the instrument naming
-    instruments_list = get_instruments(audio_path)
-
-    # creating the activation files of the targeted tracks
-    #create_activation_files(get_acoustic_stems(audio_path))
-
-    stems_ratio = processing_tracks(audio_path, target_instrument_name, copy_folders=True, stereo=False)
-
-    for track, stems in stems_ratio.items():
-        print(f"\nTrack: {track}")
-        for s in stems:
-            for n, r in s.items():
-                print(f"- {n}: {r:.2%}")
-
-    """folder_stats = get_folder_stats(audio_path.parent.joinpath("stems"))
-
-    for k, v in folder_stats.items():
-        print(f"\n{k}")
-        for s in v:
-            print(f"-{s}")"""
+    pass

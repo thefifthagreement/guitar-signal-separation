@@ -1,10 +1,13 @@
+"""
+script to launch a training session of the model
+"""
 import os
 from pathlib import Path
 import subprocess
 from time import time
 
-umx_train_path = "/home/mvitry/Dev/open-unmix-pytorch"
-umx_data_path = Path("/media/mvitry/Windows/umx")
+umx_train_path = "/path/to/open-unmix-pytorch/repo"
+umx_data_path = Path("/path/to/preprocessed/data")
 
 target_instrument = "acoustic_guitar"
 target_file = "acoustic_guitar.wav"
@@ -23,7 +26,7 @@ seed = "42"
 args = [
     "python", "train.py",
     "--target", target_instrument,
-    "--model", str(model),
+    #"--model", str(model), # uncomment to resume training
     "--dataset", dataset_type,
     "--root", str(root),
     "--output", str(output),

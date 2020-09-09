@@ -2,12 +2,14 @@
 """
 Utilities to get list from MedleyDB metadata
 """
+from os import environ
+import numpy as np
 import pandas as pd
 from pathlib import Path
 from librosa import load
 import soundfile as sf
 
-def get_instruments_list(stems):
+def get_instruments_list(stems) -> list:
     """
     Returns a list of unique instruments
 
@@ -19,7 +21,7 @@ def get_instruments_list(stems):
         for s in stem.values():
             instruments_list.append(s["instrument"])
 
-    return set(instruments_list)
+    return list(set(instruments_list))
 
 def get_instruments_dict(instruments_list):
     """
@@ -110,11 +112,11 @@ def get_excerpt(wav_path: Path, offset, duration):
     sf.write(wav_path.parent.joinpath(wav_path.name.split(".")[0] + "_excerpt.wav"), wav, sr)
 
 if __name__ == "__main__":
-    wd_path = Path.cwd()
+    wd_path = Path(__file__).parent
 
-    # metadata table
-    metadata_path = wd_path.joinpath("data")
-    metadata_df = pd.read_csv(metadata_path.joinpath("metadata.csv"))
+    # metadata table path
+    data_path = wd_path.parent.joinpath("data")
+    metadata_df = pd.read_csv(data_path.joinpath("metadata.csv"))
 
     instruments_dict = get_instruments_dict(get_instruments_list(metadata_df["stems"]))
     print("instrument list:")

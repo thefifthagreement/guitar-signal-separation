@@ -67,6 +67,28 @@ The choice of the target is limiting. Since the audio sources are rare we can't 
 
 The number of instrument sharing the same frequency register in the mix should also be minimal.
 
+## Architecture
+
+* In the **medeleyDB** folder:
+
+You find the dataset exploration in `EDA.ipynb` and the preprocessing fonctions in `medleydb/utils.py`.
+
+You also find the preprocessing for the tracks of Cambridge Music Technology in `cambridge/utils.py`.
+
+* In the **open-unmix** folder:
+
+`train.py` is a python script to train a model
+`training plots.ipynb` shows plots of training losses and give insights on the model metadata.
+
+* In the `website` folder:
+
+The app used to demonstrate the separation:
+![alt_text](./media/website_main_page.png)
+
+The result page:
+![alt_text](./media/website_results_page.png)
+
+
 ## References
 Open-unmix:
 ```

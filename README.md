@@ -5,7 +5,7 @@
 [Mickaël Vitry](https://www.linkedin.com/in/micka%C3%ABl-vitry-b605489b/),
 [Théo Rivaton](https://www.linkedin.com/in/th%C3%A9o-rivaton-890804123/)
 
-Jedha Data Science Bootcamp - #dsmft-paris-08 - Fullstack final project
+> Jedha Data Science Bootcamp - #dsmft-paris-08 - Fullstack final project
 
 ## Introduction
 
